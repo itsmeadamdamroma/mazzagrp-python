@@ -49,6 +49,7 @@ class MazzaClient:
 
         scheme = requirements.get("scheme", "exact")
         network = requirements.get("network", f"eip155:{BASE_CHAIN_ID}")
+        chain_id = int(network.split(":")[1]) if ":" in network else BASE_CHAIN_ID
         amount = requirements.get("amount", "0")
         asset = requirements.get("asset", USDC_BASE)
         pay_to = requirements.get("payTo", "")
@@ -75,9 +76,9 @@ class MazzaClient:
             },
             "primaryType": "TransferWithAuthorization",
             "domain": {
-                "name": extra.get("name", "USDC"),
+                "name": extra.get("name", "USD Coin"),
                 "version": extra.get("version", "2"),
-                "chainId": BASE_CHAIN_ID,
+                "chainId": chain_id,
                 "verifyingContract": asset,
             },
             "message": {
@@ -86,7 +87,7 @@ class MazzaClient:
                 "value": int(amount),
                 "validAfter": 0,
                 "validBefore": 2**64 - 1,
-                "nonce": _gen_nonce().hex(),
+                "nonce": _gen_nonce(),
             },
         }
 
